@@ -1,3 +1,1 @@
-/**
- * This file will control the switching of schedule layouts
- */
+// File to control the switching of schedule layouts

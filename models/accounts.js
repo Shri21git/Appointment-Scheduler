@@ -4,14 +4,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const orgSchema = new Schema({
+const accSchema = new Schema({
   name: {
     type: String,
     required: true,
-  },
-  orgId: {
-    type: String,
-    require: true,
   },
   password: {
     type: String,
@@ -19,7 +15,7 @@ const orgSchema = new Schema({
   },
   // tokens for reseting passwords
   resetToken: String,
-  // resetTokenExpire: Date,
+  resetTokenExpire: Date,
 });
 
-module.exports = mongoose.model("Organization", orgSchema);
+module.exports = mongoose.model("Organization", accSchema);

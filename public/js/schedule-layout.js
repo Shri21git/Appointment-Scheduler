@@ -1,23 +1,14 @@
-/**
- * Contain the code to get the appointment schedule for each
- * profile and generate the html for them in an order manner
- */
+// appointment schedule for each profile and
+// generating the html for each in order
 
-// for each html element where class=schedule, we need to get that
-// elements id and then call the api route to get the schedule data.
-
-// replace this base url with url from .env
 const PORT = "8080";
 const baseUrl = "http://localhost:" + PORT + "/schedule/load/";
 
 function getElements() {
-  /**
-   * Get the ids of all the elements with the class name "schedule"
-   */
+  //Get the ids with class name as "schedule"
   const scheduleElements = [...document.getElementsByClassName("schedule")];
   scheduleElements.forEach((elem) => {
     let url = baseUrl + elem.id + "/" + getDate();
-    // console.log(url);
     getData(url);
   });
 }
@@ -26,33 +17,35 @@ function getDate() {
   let date = document.getElementById("date-select").value;
 
   if (date === "" || date === undefined || date === null) {
-    //   if no date has been selected, use today's date.
+    // if no date is selected, use today's date.
     const dateObj = new Date();
 
-    // format the month correctly
+    // formating the month
     let monthString = (dateObj.getMonth() + 1).toString();
     if (monthString.length === 1) {
       monthString = "0" + monthString;
     }
+    // format dd-mm-yyyy
     const dateString =
-      dateObj.getFullYear() + "-" + monthString + "-" + dateObj.getDate();
+      dateObj.getDate() + "-" + monthString + "-" + dateObj.getFullYear();
     return dateString;
   }
 
   // configure the date
-  const year = date.split("-")[0];
+  let day = date.split("-")[0];
   const month = date.split("-")[1];
-  let day = date.split("-")[2];
+  const year = date.split("-")[2];
 
-  // if the day of the month has a leading zero, remove it
+  // if the day has a leading zero, remove it
   if (day.charAt(0) === "0") {
     day = day.charAt(1);
   }
 
-  const dateString = year + "-" + month + "-" + day;
+  const dateString = day + "-" + month + "-" + year;
   return dateString;
 }
 
+// get response json data
 async function apiFetch(url) {
   const respone = await fetch(url);
   const data = await respone.json();
@@ -66,18 +59,17 @@ const getData = async (url) => {
 };
 
 function sortData(data) {
-  data.appointments.forEach((item) => (item.dayTime = new Date(item.dayTime)));
-  data.appointments.sort((d1, d2) => d1.dayTime - d2.dayTime);
-  // console.log(data);
+  data.appointments.forEach((item) => (item.onDate = new Date(item.onDate)));
+  data.appointments.sort((d1, d2) => d1.onDate - d2.onDate);
   return data.appointments;
 }
 
 function formatTimeString(date) {
-  // format the hours and get am or pm
+  // format the hours to am or pm
   let hours = date.getHours();
   let amOrPm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
-  hours = hours ? hours : 12; // the hour 0 should be 12.
+  hours = hours ? hours : 12; // the hour '0' should be 12.
 
   // format the minutes
   let minutes = date.getMinutes();
@@ -90,10 +82,9 @@ function formatTimeString(date) {
 function generateHtml(appointment, profileId) {
   /**
    * .name = name, String, MOBILE
-   * .dayTme = starting day and time, Date object, MOBILE
+   * .onDate = starting day and time, Date object, MOBILE
    * .duration = time it will take, int
-   * .phone = phone number, String, MOBILE
-   * .reason = reason for meeting, String
+   * .agenda = agenda of meeting, String
    */
   const sectionElem = document.createElement("div");
   sectionElem.className = "appointment";
@@ -106,13 +97,7 @@ function generateHtml(appointment, profileId) {
   nameElem.className = "apt-name";
   nameElem.innerHTML = appointment.name;
 
-  const phoneElem1 = document.createElement("a");
-  phoneElem1.className = "apt-phone1";
-  phoneElem1.href = "tel:" + appointment.phone;
-  phoneElem1.innerHTML = appointment.phone;
-
   divOne.appendChild(nameElem);
-  divOne.appendChild(phoneElem1);
 
   // column two
   const divTwo = document.createElement("div");
@@ -121,7 +106,7 @@ function generateHtml(appointment, profileId) {
   const timeElem = document.createElement("p");
   timeElem.className = "apt-time";
   timeElem.innerHTML =
-    "<b>Start time: </b>" + formatTimeString(appointment.dayTime);
+    "<b>Start time: </b>" + formatTimeString(appointment.onDate);
 
   const durationElem = document.createElement("p");
   durationElem.className = "apt-duration";
@@ -149,7 +134,6 @@ function generateHtml(appointment, profileId) {
   const delBtn = document.createElement("button");
   delBtn.className = "apt-delete";
   delBtn.type = "submit";
-  // delBtn.href = '/schedule/delete/' + appointment._id;
   delBtn.innerHTML = "Delete";
 
   // delete csrf token
@@ -161,42 +145,32 @@ function generateHtml(appointment, profileId) {
   delForm.appendChild(delBtn);
   delForm.appendChild(delInput);
 
-  const phoneElem2 = document.createElement("a");
-  phoneElem2.className = "apt-phone2";
-  phoneElem2.href = "tel:" + appointment.phone;
-  phoneElem2.innerHTML = appointment.phone;
-
   divThree.appendChild(delForm);
-  divThree.appendChild(phoneElem2);
 
-  // reason element
-  const reasonElem = document.createElement("p");
-  reasonElem.className = "reason";
-  reasonElem.innerHTML = "<b>Reason: </b>" + appointment.reason;
+  // agenda element
+  const agendaElem = document.createElement("p");
+  agendaElem.className = "agenda";
+  agendaElem.innerHTML = "<b>agenda: </b>" + appointment.agenda;
 
   // add each column to the section
   sectionElem.appendChild(divOne);
   sectionElem.appendChild(divTwo);
   sectionElem.appendChild(divThree);
-  sectionElem.appendChild(reasonElem);
+  sectionElem.appendChild(agendaElem);
 
-  // details button event listener
+  // event listener for details button
   detailsBtn.addEventListener("click", () => {
     if (detailsBtn.className !== "apt-details-btn active") {
       detailsBtn.className = "apt-details-btn active";
-      phoneElem1.style.display = "block";
       durationElem.style.display = "block";
       delBtn.style.display = "block";
-      reasonElem.style.display = "block";
-      phoneElem2.style.display = "none";
+      agendaElem.style.display = "block";
       detailsBtn.innerHTML = "Hide";
     } else {
       detailsBtn.className = "apt-details-btn";
-      phoneElem1.style.display = "none";
       durationElem.style.display = "none";
       delBtn.style.display = "none";
-      reasonElem.style.display = "none";
-      phoneElem2.style.display = "block";
+      agendaElem.style.display = "none";
       detailsBtn.innerHTML = "Details";
     }
   });
@@ -204,9 +178,11 @@ function generateHtml(appointment, profileId) {
   return sectionElem;
 }
 
+// render the details
 function loadData(data) {
-  // sort the data by time
+  // if any appointments
   if (data.appointments.length > 0) {
+    // sort the data by time
     const sortedData = sortData(data);
     profileId = data.profileId;
 
@@ -217,17 +193,16 @@ function loadData(data) {
       sectionElem.appendChild(generateHtml(item, profileId));
     });
   } else {
-    console.log("No data");
+    console.log("No appointments!");
     return;
   }
 }
 
+// call the function getElements
 getElements();
 
-// event listeners and functions
-
-function dateButtonControl() {
-  // clear previous day data
+// to clear previous data
+function dateBtnControl() {
   const scheduleElem = [...document.getElementsByClassName("schedule")];
   scheduleElem.forEach((elem) => {
     elem.innerHTML = "";
@@ -235,6 +210,4 @@ function dateButtonControl() {
   getElements();
 }
 
-document
-  .getElementById("date-btn")
-  .addEventListener("click", dateButtonControl);
+document.getElementById("date-btn").addEventListener("click", dateBtnControl);

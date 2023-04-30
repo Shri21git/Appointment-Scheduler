@@ -1,49 +1,91 @@
 body {
-  background-color: #f4f7f5;
+  background-color: #f8f8f8;
+  font-family:Georgia, 'Times New Roman', Times, serifs;
   width: 100%;
 }
 
 body header {
-  background-color: #00978d;
-  color: #f4f7f5;
+  background-color: #0f61dd;
+  padding: 20px;
 }
 
 body header nav ul {
   list-style: none;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
-  max-width: 300px;
+  justify-content: space-evenly;
+  max-width: 400px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 20px;
 }
 
 body header nav ul .nav-btn:visited,
 body header nav ul .nav-btn:link,
 body header nav ul button.nav-btn {
   display: inline-block;
-  min-width: 75px;
+  min-width: 100px;
   font-weight: bold;
   font-size: 1.1em;
   text-align: center;
   text-decoration: none;
-  background-color: #00978d;
+  background-color: navy;
   color: #f4f7f5;
   border: 1px solid #f4f7f5;
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 17px;
+  transition: ease 0.2s;
 }
 
 body header nav ul .nav-btn:hover {
   background-color: #f4f7f5;
-  color: #00978d;
-  border-color: #00978d;
+  color: #03c53a;
+  border-color: rgba(0, 255, 55, 0.734);
+  padding: 20px;
 }
 
-body main #content {
-  margin: 40px 15px;
+#content {
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
 }
-/*# sourceMappingURL=styles.css.map */
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-align: center;
+  -webkit-text-stroke: 1px black;
+}
+
+.home_page{
+  background-image: url('https://thumbs.dreamstime.com/b/welcome-word-written-looking-card-wood-94326261.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#date-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#date-select {
+  padding: 8px;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+#date-btn {
+  background-color: #007bff;
+  color: white;
+  border-color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: ease 0.2s;
+} 
+
+#date-btn:hover {
+  background-color: navy;
+  transition: ease 0.2s;
+}

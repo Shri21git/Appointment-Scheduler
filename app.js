@@ -11,7 +11,7 @@ require("dotenv").config();
 // import the exported files
 const authRoutes = require("./routes/auth-routes");
 const scheduleRoutes = require("./routes/schedule-routes");
-const OrgAccount = require("./models/org");
+const OrgAccount = require("./models/accounts");
 const isAuth = require("./middleware/is-auth");
 
 // Server set up

@@ -13,6 +13,7 @@ const profileSchema = new Schema({
     type: String,
     reqired: true,
   },
+  // if we want to extend to other apps
   phone: {
     type: String,
     required: true,

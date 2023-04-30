@@ -22,7 +22,7 @@ const scheduleSchema = new Schema({
           type: Date,
           required: true,
         },
-        time: {
+        duration: {
           type: Number,
           required: true,
         },
