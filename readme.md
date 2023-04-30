@@ -8,4 +8,4 @@ This application is designed to keep track of multiple schedules for individuals
 
 # Running
 
-To check on this project, you can create a fork of the code, clone it onto your local computer, and run "npm install" in your terminal. Once the installation is complete, create a .env file containing your MongoDB connection string. After configuring your .env file and installing all required packages, start the application by running "npm start" and navigate to [localhost:5050](http://localhost:5050/) in your preferred browser.
+To check on this project, you can create a fork of the code, clone it onto your local computer, and run "npm install" in your terminal. Once the installation is complete, create a .env file containing your MongoDB connection string. After configuring your .env file and installing all required packages, start the application by running "npm start" and navigate to [localhost:8080](http://localhost:8080/) in your preferred browser.
