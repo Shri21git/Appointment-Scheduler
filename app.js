@@ -1,17 +1,17 @@
 // import libraries required for the app
 const express = require("express");
 const mongoose = require("mongoose");
-const MongoDBStore = require("connect-mongodb-session")(session);
 const bodyParser = require("body-parser");
 const path = require("path");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 require("dotenv").config();
 
 // import the exported files
 const authRoutes = require("./routes/auth-routes");
 const scheduleRoutes = require("./routes/schedule-routes");
-const OrgAccount = require("./models/accounts");
+const compAccount = require("./models/accounts");
 const isAuth = require("./middleware/is-auth");
 
 // Server set up
@@ -47,7 +47,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // set up for session
 app.use(
   session({
-    secret: "Shri-screct",
+    secret: "Shri-secret",
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -65,16 +65,17 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  if (!req.session.org) {
+  if (!req.session.compId) {
     return next();
   }
-  OrgAccount.findById(req.session.org._id)
-    .then((org) => {
-      // if org exists
-      if (!org) {
+  compAccount
+    .findById(req.session.compId._id)
+    .then((comp) => {
+      // if comp exists
+      if (!comp) {
         return next();
       }
-      req.org = org;
+      req.comp = comp;
       next();
     })
     .catch((err) => {

@@ -14,25 +14,21 @@
     <main>
       <div id="content">
         <div class="form-container">
-          <form action="/register" method="post" autocomplete="off">
+          <form action="/signup" method="post" autocomplete="off">
             <div class="form-control">
-              <label for="name">Organization Name</label>
-              <input name="name" type="text" />
-            </div>
-            <div class="form-control">
-              <label for="orgId">Organization ID</label>
-              <input name="orgId" type="text" />
+              <label for="name">Username</label>
+              <input name="name" type="text" required/>
             </div>
             <div class="form-control">
               <label for="password">Password</label>
-              <input name="password" type="password" />
+              <input name="password" type="password" required/>
             </div>
             <div class="form-control">
               <label for="confirmPassword">Confirm Password</label>
-              <input name="confirmPassword" type="password" />
+              <input name="confirmPassword" type="password" required/>
             </div>
             <input type="hidden" name="_csrf" value="<%=csrfToken %>" />
-            <button class="btn" type="submit">Register</button>
+            <button class="btn" type="submit">Sign Up</button>
           </form>
         </div>
       </div>

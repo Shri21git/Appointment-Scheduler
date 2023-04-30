@@ -13,9 +13,9 @@
     <header><%- include('../includes/nav.ejs') %></header>
     <main>
       <div id="content">
-        <div class="form-container">
+        <div class="p-form-container">
           <form
-            action="<% if (!editing) { %>/schedule/profile<% } else { %>/schedule/update-profile<% } %>"
+            action="<% if (!editing) { %>/schedule/profile<% } else { %>/schedule/profile/update<% } %>"
             method="post"
             autocomplete="off"
           >
@@ -38,7 +38,7 @@
               />
             </div>
             <div class="form-control">
-              <label for="phone">Phone Number</label>
+              <label for="phone">Phone Number</label><br>
               <input
                 type="tel"
                 name="phone"
@@ -46,8 +46,8 @@
                 value="<% if (editing) { %><%= profile.phone %><% } %>"
               />
             </div>
-            <div class="form-control">
-              <label for="availability">Availability</label>
+            <div class="form-control container">
+              <label for="availability">Availability</label><br>
               <input type="checkbox" name="Sunday" value="true" /> Sunday<br />
               <input type="checkbox" name="Monday" value="true" /> Monday<br />
               <input type="checkbox" name="Tuesday" value="true" />
@@ -78,6 +78,5 @@
         </div>
       </div>
     </main>
-    <footer></footer>
   </body>
 </html>

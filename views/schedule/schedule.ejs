@@ -15,7 +15,7 @@
     <header><%- include('../includes/nav.ejs') %></header>
     <main>
       <div id="content">
-        <h1><%= orgName %></h1>
+        <h1><%= username %></h1>
         <div id="date-container">
           <input type="date" name="date-select" id="date-select" />
           <button id="date-btn">View Day</button>
@@ -43,7 +43,7 @@
             <% } %>
           </div>
           <% } else { %>
-          <a href="/schedule/profile">Create Profile</a>
+          <h1>Create Profile a profile first!</h1>
           <% } %>
         </div>
         <div class="form-container">
@@ -57,7 +57,7 @@
               <input type="text" name="name" id="name-input" required />
             </div>
             <div class="form-control">
-              <label for="day">Day</label>
+              <label for="day">Current Day</label><br>
               <input type="date" name="day" id="" required />
             </div>
             <div class="form-control">
@@ -83,9 +83,9 @@
               </select>
             </div>
             <div class="form-control">
-              <label for="reason">Reason for Visit</label>
+              <label for="agenda">Agenda for Appointment</label><br>
               <textarea
-                name="reason"
+                name="agenda"
                 id="reason"
                 cols="30"
                 rows="10"
@@ -98,7 +98,7 @@
               id="_csrf"
               value="<%= csrfToken %>"
             />
-            <button type="submit">Add Appointment</button>
+            <button class="btn" type="submit">Add Appointment</button>
           </form>
         </div>
       </div>

@@ -17,7 +17,7 @@ function getDate() {
   let date = document.getElementById("date-select").value;
 
   if (date === "" || date === undefined || date === null) {
-    // if no date is selected, use today's date.
+    // if no date has been selected, use today's date.
     const dateObj = new Date();
 
     // formating the month
@@ -25,23 +25,22 @@ function getDate() {
     if (monthString.length === 1) {
       monthString = "0" + monthString;
     }
-    // format dd-mm-yyyy
     const dateString =
-      dateObj.getDate() + "-" + monthString + "-" + dateObj.getFullYear();
+      dateObj.getFullYear() + "-" + monthString + "-" + dateObj.getDate();
     return dateString;
   }
 
   // configure the date
-  let day = date.split("-")[0];
+  const year = date.split("-")[0];
   const month = date.split("-")[1];
-  const year = date.split("-")[2];
+  let day = date.split("-")[2];
 
-  // if the day has a leading zero, remove it
+  // if the day of the month has a leading zero, remove it
   if (day.charAt(0) === "0") {
     day = day.charAt(1);
   }
 
-  const dateString = day + "-" + month + "-" + year;
+  const dateString = year + "-" + month + "-" + day;
   return dateString;
 }
 
@@ -81,8 +80,8 @@ function formatTimeString(date) {
 
 function generateHtml(appointment, profileId) {
   /**
-   * .name = name, String, MOBILE
-   * .onDate = starting day and time, Date object, MOBILE
+   * .title = name, String,
+   * .onDate = starting day and time, Date object,
    * .duration = time it will take, int
    * .agenda = agenda of meeting, String
    */
@@ -95,7 +94,7 @@ function generateHtml(appointment, profileId) {
 
   const nameElem = document.createElement("p");
   nameElem.className = "apt-name";
-  nameElem.innerHTML = appointment.name;
+  nameElem.innerHTML = appointment.title;
 
   divOne.appendChild(nameElem);
 

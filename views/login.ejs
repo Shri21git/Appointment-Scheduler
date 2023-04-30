@@ -16,22 +16,18 @@
         <div class="form-container">
           <form action="/login" method="post" autocomplete="off">
             <div class="form-control">
-              <label for="orgId">Organization ID</label>
-              <input name="orgId" type="text" />
+              <label for="name">Username</label>
+              <input name="name" type="text" required/>
             </div>
             <div class="form-control">
               <label for="password">Password</label>
-              <input name="password" type="password" />
+              <input name="password" type="password" required/>
             </div>
             <input type="hidden" name="_csrf" value="<%=csrfToken %>" />
             <button class="btn" type="submit">Login</button>
-            <a type="button" class="btn" href="/reset-password"
-              >Forgot Your Password?</a
-            >
           </form>
         </div>
       </div>
     </main>
-    <footer></footer>
   </body>
 </html>

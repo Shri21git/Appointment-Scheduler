@@ -1,20 +1,19 @@
 // Handling routes to /schedule
 
 // import necessary files
-// const OrgAccount = require("../models/org");
 const Profile = require("../models/profile");
 const Schedule = require("../models/schedule");
 
 // for /schedule => GET
 exports.getSchedule = (req, res, next) => {
   // get all profiles available
-  Profile.find({ orgId: req.org._id })
+  Profile.find({ name: req.body.name })
     .then((profiles) => {
       // send all of the profiles to the template
       res.render("schedule/schedule", {
         pageTitle: "Schedule",
-        orgName: req.org.name,
         isAuthenticated: req.session.isLoggedIn,
+        username: req.body.name,
         profiles: profiles,
       });
     })
@@ -23,37 +22,23 @@ exports.getSchedule = (req, res, next) => {
     });
 };
 
-// //schedule/profile => GET
+// for /schedule/profile => GET
 exports.getProfile = (req, res, next) => {
-  // if we are editing an existing profile, we will
-  // need to search the db for the info.
   let editing = false;
 
-  // autofill form data if we are in edit mode
-  if (editing) {
-    res.render("schedule/profile", {
-      editing: false,
-      profile: null,
-      isAuthenticated: req.session.isLoggedIn,
-    });
-    // leave form empty if we are not in edit mode
-  } else {
-    res.render("schedule/profile", {
-      editing: false,
-      profile: null,
-      isAuthenticated: req.session.isLoggedIn,
-    });
-  }
+  res.render("schedule/profile", {
+    editing: false,
+    profile: null,
+    isAuthenticated: req.session.isLoggedIn,
+  });
 };
 
-// /schedule/profile => POST
-// adding or editing a profile
+// for /schedule/profile => POST
 exports.postProfile = (req, res, next) => {
-  // get form data
+  // adding or editing a profile
   const fname = req.body.fname;
   const lname = req.body.lname;
   const phone = req.body.phone;
-  const position = req.body.position;
   const available = {
     sun: req.body.Sunday,
     mon: req.body.Monday,
@@ -63,7 +48,7 @@ exports.postProfile = (req, res, next) => {
     fri: req.body.Friday,
     sat: req.body.Saturday,
   };
-  const orgId = req.org._id;
+  const position = req.body.position;
 
   for (var key of Object.keys(available)) {
     if (available[key] === undefined) {
@@ -88,7 +73,6 @@ exports.postProfile = (req, res, next) => {
       },
     },
     position: position,
-    orgId: orgId,
   });
 
   newProfile.save();
@@ -104,7 +88,7 @@ exports.postProfile = (req, res, next) => {
   res.redirect("/schedule");
 };
 
-// /schedule/add-appointment => POST
+// for /schedule/add-appointment => POST
 exports.postAppointment = (req, res, next) => {
   // get the appointment data from the body
 
@@ -112,20 +96,20 @@ exports.postAppointment = (req, res, next) => {
   const day = req.body.day;
   const time = req.body.start;
   const dateTime = new Date();
-
-  dateTime.setFullYear(day.split("-")[0]);
-  dateTime.setMonth(day.split("-")[1] - 1);
+  // console.log(dateTime);
   dateTime.setDate(day.split("-")[2]);
+  dateTime.setMonth(day.split("-")[1] - 1);
+  dateTime.setFullYear(day.split("-")[0]);
 
   dateTime.setHours(time.split(":")[0]);
   dateTime.setMinutes(time.split(":")[1]);
 
   // get the remaining form data
   const appointment = {
-    dayTime: dateTime,
+    title: req.body.name,
+    agenda: req.body.agenda,
+    onDate: dateTime,
     duration: req.body.duration,
-    name: req.body.name,
-    reason: req.body.reason,
     phone: req.body.phone,
   };
 
@@ -133,7 +117,7 @@ exports.postAppointment = (req, res, next) => {
   Schedule.findOne({ profileId: req.body.profile })
     .then((schedule) => {
       if (!schedule) {
-        console.log("No matching schedule found");
+        console.log("No matching schedule found!");
         return;
       }
       return schedule.addAppointment(appointment);
@@ -152,30 +136,29 @@ exports.getScheduleData = (req, res, next) => {
   const dateString = newDate.toLocaleDateString();
 
   Schedule.findOne({ profileId: profileId })
-    .then((sch) => {
+    .then((sche) => {
       // if no schedule was found
-      if (!sch) {
-        console.log("No schedule found");
+      if (!sche) {
+        console.log("No schedule found!");
         return;
       }
 
       // use the filter method to sort through the appointments
-      const filteredApnt = sch.schedule.appointments.filter(
-        (apt) => apt.dayTime.toLocaleDateString() === dateString
+      const filteredApnt = sche.schedule.appointments.filter(
+        (apt) => apt.onDate.toLocaleDateString() === dateString
       );
 
       res
         .status(200)
-        .json({ appointments: filteredApnt, profileId: sch.profileId });
+        .json({ appointments: filteredApnt, profileId: sche.profileId });
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
+// same as add profile but fill the input elements with the existing values
 exports.getEditProfile = (req, res, next) => {
-  // same as add profile but fill the input
-  // elements with the existing values
   const editing = req.query.edit;
 
   // if we are not in edit mode, redirect to /schedule
@@ -195,8 +178,7 @@ exports.getEditProfile = (req, res, next) => {
         return res.redirect("/schedule");
       }
 
-      // if the profile was found render the view with the old
-      // profile data
+      // if the profile was found, render the view with the old profile data
       res.render("schedule/profile", {
         editing: editing,
         profile: profile,
@@ -206,7 +188,59 @@ exports.getEditProfile = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-exports.postEditProfile = (req, res, next) => {};
+exports.postEditProfile = (req, res, next) => {
+  // editing a profile
+  const fname = req.body.fname;
+  const lname = req.body.lname;
+  const phone = req.body.phone;
+  const available = {
+    sun: req.body.Sunday,
+    mon: req.body.Monday,
+    tue: req.body.Tuesday,
+    wed: req.body.Wednesday,
+    thu: req.body.Thursday,
+    fri: req.body.Friday,
+    sat: req.body.Saturday,
+  };
+  const position = req.body.position;
+
+  for (var key of Object.keys(available)) {
+    if (available[key] === undefined) {
+      available[key] = false;
+    }
+  }
+
+  // update profile
+  Profile.findOneAndUpdate(
+    { fname: fname }, // find the profile with the matching fname
+    {
+      fname: fname,
+      lname: lname,
+      phone: phone,
+      availability: {
+        days: {
+          sun: available.sun,
+          mon: available.mon,
+          tue: available.tue,
+          wed: available.wed,
+          thu: available.thu,
+          fri: available.fri,
+          sat: available.sat,
+        },
+      },
+      position: position,
+    },
+    { new: true } // return the updated profile instead of the old one
+  )
+    .then((updatedProfile) => {
+      console.log("profile updated!");
+      res.redirect("/schedule");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.redirect("/schedule");
+    });
+};
 
 exports.deleteAppointment = (req, res, next) => {
   // get parameters
@@ -217,7 +251,7 @@ exports.deleteAppointment = (req, res, next) => {
     .then((schedule) => {
       // if no schedule was found...
       if (!schedule) {
-        console.log("no schedule found.");
+        console.log("no schedule found!");
         return res.redirect("/schedule");
       }
       return schedule.removeAppointment(schId);
@@ -227,7 +261,6 @@ exports.deleteAppointment = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-
       res.redirect("/schedule");
     });
 };

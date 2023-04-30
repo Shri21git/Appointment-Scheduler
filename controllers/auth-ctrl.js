@@ -2,7 +2,7 @@
 const bcrypt = require("bcryptjs");
 
 // import necessary files
-const compAccount = require("../models/org");
+const compAccount = require("../models/accounts");
 
 // for /login => GET
 exports.getLogin = (req, res, next) => {
@@ -20,15 +20,15 @@ exports.postLogin = (req, res, next) => {
   // find the account with name
   compAccount
     .findOne({ name: name })
-    .then((name) => {
+    .then((account) => {
       // if name was found, redirect to /login
-      if (!name) {
+      if (!account) {
         console.log("No account found!");
         return res.redirect("/login");
       }
       // compare the password if account found
       bcrypt
-        .compare(pass, name.password)
+        .compare(pass, account.password)
         .then((isMatch) => {
           // if the passwords match, set up the session
           if (isMatch) {

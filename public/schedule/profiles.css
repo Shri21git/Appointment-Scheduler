@@ -33,7 +33,7 @@ body #day-profile-view .profile-container .schedule .appointment {
   border-left: 10px solid #1c9700;
   display: grid;
   text-align: center;
-  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 body #day-profile-view .profile-container .schedule .appointment .apt-duration,
@@ -64,8 +64,16 @@ body #day-profile-view .profile-container .schedule .appointment .reason {
   margin-right: 5px;
 }
 
-.apt-details-btn:hover, .apt-delete:hover {
-  background-color: black;
+.apt-delete{
+  float: right;
+}
+
+.apt-details-btn:hover {
+  background-color: green;
+}
+
+.apt-delete:hover {
+  background-color: red;
 }
 
 .agenda {

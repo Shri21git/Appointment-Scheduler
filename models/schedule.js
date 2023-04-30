@@ -26,6 +26,10 @@ const scheduleSchema = new Schema({
           type: Number,
           required: true,
         },
+        phone: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },
