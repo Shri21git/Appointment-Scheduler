@@ -30,8 +30,33 @@
             <input type="hidden" name="_csrf" value="<%=csrfToken %>" />
             <button class="btn" type="submit">Sign Up</button>
           </form>
+          <input type="hidden" id="checkSignup" value="<%=signup %>">
         </div>
       </div>
     </main>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    var signup = document.getElementById('checkSignup');
+    if(signup.value == 'mismatch'){
+      Swal.fire({
+        title: "Oops..!",
+        text: "Passwords mismatch!",
+        icon: "error",
+      });
+    } else if(signup.value == 'success'){
+      Swal.fire({
+        title: "Success!",
+        text: "Account created! proceed to login!",
+        icon: "success",
+      });
+    } else if(signup.value == 'already'){
+      Swal.fire({
+        title: "Oops..!",
+        text: "Username already exists!",
+        icon: "error",
+      });
+    }
+  </script>
+  </script>
 </html>

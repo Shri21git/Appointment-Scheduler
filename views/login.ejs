@@ -26,8 +26,26 @@
             <input type="hidden" name="_csrf" value="<%=csrfToken %>" />
             <button class="btn" type="submit">Login</button>
           </form>
+          <input type="hidden" id="checkLogin" value="<%=login %>">
         </div>
       </div>
     </main>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    var login = document.getElementById('checkLogin');
+    if(login.value == 'notfound'){
+      Swal.fire({
+        title: "Oops..!",
+        text: "No account found!",
+        icon: "error",
+      });
+    } else if(login.value == 'invalid'){
+      Swal.fire({
+        title: "Oops..!",
+        text: "Invalid credentials!",
+        icon: "error",
+      });
+    }
+  </script>
 </html>

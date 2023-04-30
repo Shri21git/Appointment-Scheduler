@@ -1,5 +1,6 @@
 // import libraries required
 const bcrypt = require("bcryptjs");
+const Swal = require("sweetalert2");
 
 // import necessary files
 const compAccount = require("../models/accounts");
@@ -9,6 +10,7 @@ exports.getLogin = (req, res, next) => {
   res.render("login", {
     pageTitle: "Login",
     isAuthenticated: false,
+    login: "notyet",
   });
 };
 
@@ -24,7 +26,11 @@ exports.postLogin = (req, res, next) => {
       // if name was found, redirect to /login
       if (!account) {
         console.log("No account found!");
-        return res.redirect("/login");
+        return res.render("login", {
+          pageTitle: "Login",
+          isAuthenticated: false,
+          login: "notfound",
+        });
       }
       // compare the password if account found
       bcrypt
@@ -43,7 +49,11 @@ exports.postLogin = (req, res, next) => {
           }
           // if the passwords do not match, redirect to /login
           console.log("Invalid credentials!");
-          return res.redirect("/login");
+          return res.render("login", {
+            pageTitle: "Login",
+            isAuthenticated: false,
+            login: "invalid",
+          });
         })
         .catch((err) => {
           // catch any errors
@@ -62,6 +72,7 @@ exports.getSignup = (req, res, next) => {
   res.render("signup", {
     pageTitle: "Sign-Up",
     isAuthenticated: false,
+    signup: "doing",
   });
 };
 
@@ -75,7 +86,11 @@ exports.postSignup = (req, res, next) => {
   // create a new account only if the passwords match
   if (pass !== confirmPass) {
     console.log("Passwords mismatch!");
-    return res.redirect("/signup");
+    return res.render("signup", {
+      pageTitle: "Sign-Up",
+      isAuthenticated: false,
+      signup: "mismatch",
+    });
   }
 
   // encrypt the password and create the account
@@ -90,12 +105,18 @@ exports.postSignup = (req, res, next) => {
       return account.save();
     })
     .then((result) => {
-      return res.redirect("/login");
+      return res.render("signup", {
+        pageTitle: "Sign-Up",
+        isAuthenticated: false,
+        signup: "success",
+      });
     })
     .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      return res.render("signup", {
+        pageTitle: "Sign-Up",
+        isAuthenticated: false,
+        signup: "already",
+      });
     });
 };
 
