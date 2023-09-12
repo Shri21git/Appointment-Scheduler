@@ -12,4 +12,4 @@ To check on this project, you can create a fork of the code, clone it onto your 
 
 # Deployment
 
-Check out (https://shri21g-appointment-scheduler.onrender.com/) for a demo!
+Check out https://shri21g-appointment-scheduler.onrender.com for a demo!
